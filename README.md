@@ -1,33 +1,83 @@
-# Banking System Simulation
+md
+# Banking System
 
-## Overview
+BankingSystem is a console-based Java application that simulates essential banking operations with MySQL database integration. It allows users to create accounts, deposit, withdraw, and check balances securely through an interactive menu-driven interface.
 
-**BankingSystemSimulation** is a console-based banking application that replicates basic banking functionalities. This program allows users to manage their accounts through a simple and interactive menu interface.
+## 📂 Folder Structure
+![image](https://github.com/user-attachments/assets/6417ad4f-c9c7-4324-a0b7-6582db2695df)
 
-## Features
+ 
+## 📌 Setup Instructions
 
-- **Create Accounts**: Users can create accounts by providing their name, account number, initial balance, and PIN.
-  
-- **Check Balance**: Users can check their account balance by entering the account number and PIN for verification.
-  
-- **Deposit Money**: Users can deposit money into their account, which increases their balance.
-  
-- **Withdraw Money**: Users can withdraw money from their account, with checks in place to ensure the balance never goes negative and that the bank has sufficient funds.
-  
-- **Error Handling**: The system includes checks for invalid actions, such as incorrect account numbers, PINs, or attempts to withdraw more than the available balance.
-  
-- **Interactive Menu**: Users are guided through the process via an easy-to-use menu interface for managing accounts and transactions.
+### 1️⃣ Clone the Repository
+```sh
+git clone https://github.com/your-repo/BankingApp.git
+cd BankingApp
+```
 
-## Getting Started
+### 2️⃣ Create a `.env` File
+Inside the `root/` directory, create a `.env` file:
+```ini
+DB_URL=jdbc:mysql://localhost:3306/bank
+DB_USER=root
+DB_PASSWORD=yourpassword
+```
 
-To run the Banking System Simulation:
+### 3️⃣ Setup MySQL Database
 
-1. Ensure you have Java Development Kit (JDK) installed on your machine.
-2. Clone or download the repository containing the source code.
-3. Open a terminal or command prompt and navigate to the directory where the code is located.
-4. Compile the Java files using:
+Create Database
+```
+CREATE DATABASE bank;
+USE bank;
+```
 
+Create mangalbank
+```
 
-## Usage
+CREATE TABLE mangalbank (
+    bank_id INT PRIMARY KEY AUTO_INCREMENT, 
+    bank_name VARCHAR(100) NOT NULL, 
+    branch_name VARCHAR(100), 
+    total_balance DOUBLE NOT NULL DEFAULT 0, 
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
 
-Upon running the application, users will be presented with a menu of options to choose from. Follow the prompts to create an account, check your balance, deposit money, or withdraw funds.
+```
+
+Create Accounts
+```sql
+
+CREATE TABLE accounts (
+    account_number VARCHAR(20) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    pin double NOT NULL,
+    balance DECIMAL(10,2) NOT NULL
+);
+```
+
+### 4️⃣ Compile and Run the Project
+
+#### 🔹 Compile
+```sh
+javac -cp . src/main/BankImplementation.java
+```
+
+#### 🔹 Run
+```sh
+java -cp . src.main.BankImplementation
+```
+
+## 🚀 Features
+✔ Secure database connection using `.env`  
+✔ Create bank accounts  
+✔ Deposit, Withdraw, and Check Balance  
+✔ Supports MySQL database  
+
+## 🛠 Technologies Used
+- Java
+- MySQL
+- JDBC
+- `.env` for secure credentials management
+
+# Contribute💓
+ 
