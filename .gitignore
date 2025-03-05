@@ -3,6 +3,31 @@
 
 # Ignore the default directory for Eclipse project files
 /.settings/
+/.project
+/.classpath
 
 # Ignore the default directory for IntelliJ project files
 .idea/
+*.iml
+*.iws
+*.ipr
+
+# Ignore any local environment files
+.env
+*.env
+
+# Ignore log files
+*.log
+
+# Ignore build directories
+/target/
+/build/
+/out/
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore any generated files or directories
+/bin/
+/dist/
