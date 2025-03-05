@@ -18,7 +18,8 @@ public class BankImplementation {
             System.out.println("2. Check Balance");
             System.out.println("3. Deposit Money");
             System.out.println("4. Withdraw Money");
-            System.out.println("5. Exit");
+            System.out.println("5. MangalBank");
+            System.out.println("6. Exit");
             System.out.print("Choose an option (1-5): ");
             int choice = scanner.nextInt();
 
@@ -33,7 +34,7 @@ public class BankImplementation {
                     String accountNo = scanner.nextLine();
 
                     System.out.print("Enter initial balance: ");
-                    int balance = scanner.nextInt();
+                    double balance = scanner.nextDouble();
 
                     System.out.print("Set your PIN: ");
                     int pin = scanner.nextInt();
@@ -45,7 +46,7 @@ public class BankImplementation {
                 case 2:
                     // Check balance
                     System.out.print("Enter account number: ");
-                    scanner.nextLine();  
+                    scanner.nextLine();
                     accountNo = scanner.nextLine();
 
                     System.out.print("Enter your PIN: ");
@@ -66,7 +67,7 @@ public class BankImplementation {
                     accountNo = scanner.nextLine();
 
                     System.out.print("Enter amount to deposit: ");
-                    int depositAmount = scanner.nextInt();
+                    double depositAmount = scanner.nextDouble();
 
                     Message depositMessage = bank.deposit(accountNo, depositAmount);
                     if (depositMessage.status.equals("Success")) {
@@ -97,6 +98,18 @@ public class BankImplementation {
                     break;
 
                 case 5:
+                    System.out.print("Enter bank_id: ");
+                    int bankId = scanner.nextInt();
+                    Message bankDetails = bank.bankDetails(bankId);
+                    if (bankDetails.status.equals("Success")) {
+                        System.out.printf("Success Balance: %.2f%n", bankDetails.money);
+                    } else {
+                        System.out.println("Failed! Check credentials.");
+
+                    }
+                    break;
+
+                case 6:
                     // Exit
                     System.out.println("Thank you for using MangalBank. Goodbye!");
                     scanner.close();

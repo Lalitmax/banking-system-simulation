@@ -1,38 +1,94 @@
 package src.bank;
 
-import java.util.HashMap;
-import java.util.Map;
+import src.config.Db;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class Bank {
 
-    Map<String, UserDetails> details;
-    protected static int bankBalance;
+    private final Connection connection;
 
     public Bank() {
-        details = new HashMap<>();
-        bankBalance = 0;
+        this.connection = new Db().getConnection(); // Reuse a single DB connection
+        System.out.println("Mangal Bank Initialized!");
     }
 
-    public void createAccount(String name, String accountNo, int balance, int pin) {
-        details.put(accountNo, new UserDetails(name, accountNo, balance, pin));
+
+    public Message bankDetails(int bank_id) {
+        String query = "SELECT total_balance FROM mangalbank WHERE bank_id = ?";
+
+        try {
+            PreparedStatement pstmp = connection.prepareStatement(query);
+            pstmp.setInt(1, bank_id);
+            ResultSet rs = pstmp.executeQuery();
+
+            if (rs.next()) { // Check if a row exists
+                double balance = rs.getDouble("total_balance"); // Retrieve as double
+                return new Message("Success", balance);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Message("Failed", 0.0); // Return 0 if no data found
     }
 
-    public Message deposit(String accountNo, int money) {
-        UserDetails userDetails = details.get(accountNo);
-        return userDetails.addBalance(money);
+
+    //CREATE ACCOUNT (Using PreparedStatement to prevent SQL Injection)
+    public void createAccount(String name, String accountNo, double balance, int pin) {
+        String query = "INSERT INTO accounts (account_number, name, pin, balance) VALUES (?, ?, ?, ?)";
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            pstmt.setString(1, accountNo);
+            pstmt.setString(2, name);
+            pstmt.setInt(3, pin);
+            pstmt.setDouble(4, balance);  // Using double instead of int
+
+            int rowsInserted = pstmt.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("Account created successfully!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public Message withdraw(String accountNo, int pin, int money) {
-        UserDetails userDetails = details.get(accountNo);
-        return userDetails.withdrawBalance(accountNo, pin, money);
+    // DEPOSIT MONEY
+    public Message deposit(String accountNo, double money) {
+        UserDetails ud = new UserDetails();
+        return ud.addBalance(accountNo, money);
     }
+
+
+    public Message withdraw(String accountNo, int pin, double money) {
+        UserDetails ud = new UserDetails();
+        return ud.withdrawBalance(accountNo, pin, money);
+    }
+
 
     public Message checkBalance(String accountNo, int pin) {
-        UserDetails userDetails = details.get(accountNo);
-        return userDetails.checkBalance(accountNo, pin);
+        UserDetails ud = new UserDetails();
+        return ud.checkBalance(accountNo, pin);
     }
 
-    public static int checkMangalBankBalance() {
+
+    public static double checkMangalBankBalance() {
+        String query = "SELECT SUM(balance) AS total_balance FROM accounts";
+        double bankBalance = 0.0;
+
+        try (Connection conn = new Db().getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            if (rs.next()) {
+                bankBalance = rs.getDouble("total_balance");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return bankBalance;
     }
 }

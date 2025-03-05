@@ -1,9 +1,9 @@
 package src.bank;   
 public class Message {
     public String status;
-    public int money;
+    public double money;
 
-    public Message(String status, int money) {
+    public Message(String status, double money) {
         this.status = status;
         this.money = money;
     }
