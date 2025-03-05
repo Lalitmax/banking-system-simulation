@@ -1,4 +1,3 @@
-md
 # Banking System
 
 BankingSystem is a console-based Java application that simulates essential banking operations with MySQL database integration. It allows users to create accounts, deposit, withdraw, and check balances securely through an interactive menu-driven interface.
