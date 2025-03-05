@@ -1,59 +1,34 @@
 package src.config;
 
-import java.sql.*;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
 
 public class Db {
-    private Connection connection;
-    public Statement statement;
+    private static Connection connection;
 
-    public Db() {
-        try {
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/bank", "root", "Lalit!@#123");
-            statement = connection.createStatement();
-            System.out.println("Database Connected Successfully!");
-        } catch (SQLException e) {
-            e.printStackTrace();
+    public static Connection getConnection() {
+        if (connection == null) {
+            try {
+              Properties props = new Properties();
+              props.load(new FileInputStream(".env"));
+              String url = props.getProperty("DB_URL");
+              String user = props.getProperty("DB_USER");
+              String password = props.getProperty("DB_PASSWORD");
+                connection = DriverManager.getConnection(url, user, password);
+                System.out.println("✅ Database Connected Successfully!");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-    }
-
-    public Connection getConnection() {
         return connection;
     }
 
-    public void closeConnection() {
-        try {
-            if (statement != null) statement.close();
-            if (connection != null) connection.close();
-            System.out.println("Database Connection Closed.");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void printUserDetails() {
-        String query = "SELECT * FROM accounts";
-        Db db = new Db();
-
-        try (
-
-             Connection conn = db.getConnection();
-             Statement stmt = conn.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-
-            System.out.println("Account No | PIN | Balance");
-
-            while (rs.next()) {
-                System.out.println(rs.getString("account_number") + " | "
-                        + rs.getString("pin") + " | "
-                        + rs.getString("balance"));
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static void main(String[] args) {
-        printUserDetails();
-    }
 }
+
+
